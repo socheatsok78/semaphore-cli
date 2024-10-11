@@ -11,9 +11,6 @@ var (
 		Use:     "semaphore",
 		Short:   "A backup and restore tool for Semaphore CI",
 		Version: Version,
-		Run: func(cmd *cobra.Command, args []string) {
-			cmd.Help()
-		},
 	}
 )
 
