@@ -68,6 +68,23 @@ func (s *Semaphore) Login(username string, password string) error {
 }
 
 func (s *Semaphore) Backup(projectID string) error {
+	fmt.Println("creating backup")
+	req := &http.Request{
+		Method: "GET",
+		URL:    &url.URL{Scheme: s.url.Scheme, Host: s.url.Host, Path: fmt.Sprintf("/api/project/%s/backup", projectID)},
+		Header: http.Header{"Content-Type": []string{"application/json"}},
+	}
+	resp, err := s.client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("backup failed: %s", resp.Status)
+	} else {
+		fmt.Println("backup successful")
+		// TODO: save backup to file
+	}
 	return nil
 }
 

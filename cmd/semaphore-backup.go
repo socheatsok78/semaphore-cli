@@ -23,6 +23,9 @@ var backupCmd = &cobra.Command{
 			panic(err)
 		}
 		projectID := cmd.Flag("project").Value.String()
-		s.Backup(projectID)
+		err = s.Backup(projectID)
+		if err != nil {
+			panic(err)
+		}
 	},
 }
