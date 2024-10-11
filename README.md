@@ -1,2 +1,2 @@
-# semaphore-project-restore
-A workaround CLI for restore projects in Semaphore
+# semaphore-cli
+A backup and restore tool for Semaphore CI
