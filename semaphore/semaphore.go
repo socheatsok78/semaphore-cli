@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
+	"os"
 	"strings"
 )
 
@@ -84,6 +85,9 @@ func (s *Semaphore) Backup(projectID string) error {
 	} else {
 		fmt.Println("backup successful")
 		// TODO: save backup to file
+		// Print the backup to stdout for now
+		fmt.Println("backup content")
+		io.Copy(os.Stdout, resp.Body)
 	}
 	return nil
 }

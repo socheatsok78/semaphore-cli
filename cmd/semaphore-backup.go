@@ -7,8 +7,9 @@ import (
 
 func init() {
 	rootCmd.AddCommand(backupCmd)
-	backupCmd.Flags().String("project", "", "semaphore project id")
+	backupCmd.Flags().String("project-id", "", "semaphore project id")
 	backupCmd.MarkFlagRequired("project")
+	backupCmd.Flags().String("output", "backup-{project-id}.json", "output file")
 }
 
 var backupCmd = &cobra.Command{
@@ -22,7 +23,7 @@ var backupCmd = &cobra.Command{
 		if err != nil {
 			panic(err)
 		}
-		projectID := cmd.Flag("project").Value.String()
+		projectID := cmd.Flag("project-id").Value.String()
 		err = s.Backup(projectID)
 		if err != nil {
 			panic(err)

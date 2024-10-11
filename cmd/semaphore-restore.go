@@ -7,7 +7,7 @@ import (
 
 func init() {
 	rootCmd.AddCommand(restoreCmd)
-	restoreCmd.Flags().String("project", "", "semaphore project id")
+	restoreCmd.Flags().String("project-id", "", "semaphore project id")
 	restoreCmd.Flags().String("backup-file", "", "semaphore backup file to restore from")
 	restoreCmd.MarkFlagRequired("backup-file")
 }
@@ -23,7 +23,7 @@ var restoreCmd = &cobra.Command{
 		if err != nil {
 			panic(err)
 		}
-		projectID := cmd.Flag("project").Value.String()
+		projectID := cmd.Flag("project-id").Value.String()
 		s.Restore(projectID)
 	},
 }
