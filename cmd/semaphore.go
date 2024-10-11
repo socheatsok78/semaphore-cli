@@ -5,13 +5,6 @@ import (
 )
 
 var (
-	dnsResolverAddr   string
-	semaphoreAddr     string
-	semaphoreUsername string
-	semaphorePassword string
-)
-
-var (
 	// Version is the version of the CLI
 	Version = "dev"
 
@@ -24,11 +17,11 @@ var (
 )
 
 func init() {
-	rootCmd.PersistentFlags().StringVar(&dnsResolverAddr, "dns", "127.0.0.11", "DNS Resolver")
-	rootCmd.PersistentFlags().StringVar(&semaphoreAddr, "addr", "https://cloud.semaphoreui.com", "Semaphore URL")
-	rootCmd.PersistentFlags().StringVar(&semaphoreUsername, "username", "", "Semaphore Username")
+	rootCmd.PersistentFlags().String("dns", "127.0.0.11", "dns resolver")
+	rootCmd.PersistentFlags().String("addr", "https://cloud.semaphoreui.com", "the semaphore address")
+	rootCmd.PersistentFlags().String("username", "", "the semaphore username")
 	rootCmd.MarkPersistentFlagRequired("username")
-	rootCmd.PersistentFlags().StringVar(&semaphorePassword, "password", "", "Semaphore Password")
+	rootCmd.PersistentFlags().String("password", "", "the semaphore password")
 	rootCmd.MarkPersistentFlagRequired("password")
 }
 
