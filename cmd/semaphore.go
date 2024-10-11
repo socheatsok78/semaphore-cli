@@ -5,7 +5,7 @@ import (
 	"syscall"
 
 	"github.com/spf13/cobra"
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 )
 
 var (
@@ -49,7 +49,7 @@ func init() {
 
 func readPassword() (string, error) {
 	fmt.Print("Enter password: ")
-	bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
+	bytePassword, err := term.ReadPassword(int(syscall.Stdin))
 	if err != nil {
 		return "", err
 	}
