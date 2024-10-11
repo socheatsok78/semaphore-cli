@@ -43,7 +43,7 @@ func init() {
 	// Password flags
 	rootCmd.PersistentFlags().String("password", "", "the semaphore password")
 	rootCmd.MarkPersistentFlagRequired("password")
-	rootCmd.PersistentFlags().BoolVar(&passwordStdin, "password-stdin", false, "the semaphore password")
+	rootCmd.PersistentFlags().BoolVar(&passwordStdin, "password-stdin", false, "read password from stdin")
 	rootCmd.MarkFlagsOneRequired("password", "password-stdin")
 }
 
