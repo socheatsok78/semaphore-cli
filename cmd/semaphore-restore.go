@@ -12,5 +12,5 @@ var restoreCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(restoreCmd)
-	restoreCmd.Flags().String("project", "", "Project ID [optional]")
+	restoreCmd.Flags().String("project", "", "Project ID (optional)")
 }

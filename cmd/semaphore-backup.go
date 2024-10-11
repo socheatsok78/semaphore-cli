@@ -13,4 +13,5 @@ var backupCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(backupCmd)
 	backupCmd.Flags().String("project", "", "Project ID")
+	backupCmd.MarkFlagRequired("project")
 }

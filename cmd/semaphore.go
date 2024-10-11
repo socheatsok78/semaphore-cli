@@ -25,7 +25,9 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&dnsResolver, "dns", "127.0.0.11", "DNS Resolver")
 	rootCmd.PersistentFlags().StringVar(&semaphoreURL, "semaphore", "https://cloud.semaphoreui.com", "Semaphore URL")
 	rootCmd.PersistentFlags().StringVar(&semaphoreUsername, "semaphore-username", "", "Semaphore Username")
+	rootCmd.MarkPersistentFlagRequired("semaphore-username")
 	rootCmd.PersistentFlags().StringVar(&semaphorePassword, "semaphore-password", "", "Semaphore Password")
+	rootCmd.MarkPersistentFlagRequired("semaphore-password")
 }
 
 func Execute() error {
