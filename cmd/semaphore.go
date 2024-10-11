@@ -18,7 +18,6 @@ var (
 		Short:   "A backup and restore tool for Semaphore CI",
 		Version: Version,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			// check if password-stdin is set
 			if passwordStdin {
 				password, err := readPassword()
 				if err != nil {
@@ -53,6 +52,9 @@ func readPassword() (string, error) {
 	bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
 	if err != nil {
 		return "", err
+	}
+	if len(bytePassword) == 0 {
+		return "", fmt.Errorf("password cannot be empty")
 	}
 	fmt.Println()
 	return string(bytePassword), nil
