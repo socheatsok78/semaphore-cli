@@ -1,6 +1,15 @@
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/spf13/cobra"
+)
+
+var (
+	dnsResolverAddr   string
+	semaphoreAddr     string
+	semaphoreUsername string
+	semaphorePassword string
+)
 
 var (
 	// Version is the version of the CLI
@@ -14,20 +23,13 @@ var (
 	}
 )
 
-var (
-	dnsResolver       string
-	semaphoreURL      string
-	semaphoreUsername string
-	semaphorePassword string
-)
-
 func init() {
-	rootCmd.PersistentFlags().StringVar(&dnsResolver, "dns", "127.0.0.11", "DNS Resolver")
-	rootCmd.PersistentFlags().StringVar(&semaphoreURL, "semaphore", "https://cloud.semaphoreui.com", "Semaphore URL")
-	rootCmd.PersistentFlags().StringVar(&semaphoreUsername, "semaphore-username", "", "Semaphore Username")
-	rootCmd.MarkPersistentFlagRequired("semaphore-username")
-	rootCmd.PersistentFlags().StringVar(&semaphorePassword, "semaphore-password", "", "Semaphore Password")
-	rootCmd.MarkPersistentFlagRequired("semaphore-password")
+	rootCmd.PersistentFlags().StringVar(&dnsResolverAddr, "dns", "127.0.0.11", "DNS Resolver")
+	rootCmd.PersistentFlags().StringVar(&semaphoreAddr, "addr", "https://cloud.semaphoreui.com", "Semaphore URL")
+	rootCmd.PersistentFlags().StringVar(&semaphoreUsername, "username", "", "Semaphore Username")
+	rootCmd.MarkPersistentFlagRequired("username")
+	rootCmd.PersistentFlags().StringVar(&semaphorePassword, "password", "", "Semaphore Password")
+	rootCmd.MarkPersistentFlagRequired("password")
 }
 
 func Execute() error {
