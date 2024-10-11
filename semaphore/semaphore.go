@@ -6,6 +6,7 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"net/http/cookiejar"
 	"net/url"
 	"strings"
 )
@@ -30,7 +31,10 @@ func New(addr string, dns string) *Semaphore {
 	dialer := &net.Dialer{
 		Resolver: dnsResolver,
 	}
-	jar := http.CookieJar(nil)
+	jar, err := cookiejar.New(nil)
+	if err != nil {
+		panic(err)
+	}
 	client := &http.Client{
 		Jar: jar,
 		Transport: &http.Transport{
