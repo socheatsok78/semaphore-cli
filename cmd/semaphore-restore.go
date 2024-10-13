@@ -5,25 +5,33 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var (
+	configRestoreProjectID  string
+	configRestoreBackupFile string
+)
+
 func init() {
 	rootCmd.AddCommand(restoreCmd)
-	restoreCmd.Flags().String("project-id", "", "semaphore project id")
-	restoreCmd.Flags().String("backup-file", "", "semaphore backup file to restore from")
+	restoreCmd.Flags().StringVar(&configRestoreProjectID, "project-id", "", "semaphore project id")
+	restoreCmd.Flags().StringVar(&configRestoreBackupFile, "backup-file", "", "semaphore backup file to restore from")
 	restoreCmd.MarkFlagRequired("backup-file")
 }
 
 var restoreCmd = &cobra.Command{
 	Use:   "restore",
 	Short: "Restore a Semaphore project from backup",
-	Run: func(cmd *cobra.Command, args []string) {
-		addr := cmd.Flag("addr").Value.String()
-		dns := cmd.Flag("dns").Value.String()
-		s := semaphore.New(addr, dns)
-		err := s.Login(cmd.Flag("username").Value.String(), cmd.Flag("password").Value.String())
+	RunE: func(cmd *cobra.Command, args []string) error {
+		s, err := semaphore.New(configAddr, configDNS)
 		if err != nil {
-			panic(err)
+			return err
 		}
-		projectID := cmd.Flag("project-id").Value.String()
-		s.Restore(projectID)
+		err = s.Authenticate(configUsername, configPassword)
+		if err != nil {
+			return err
+		}
+		if err := s.Restore(configRestoreProjectID, configRestoreBackupFile); err != nil {
+			return err
+		}
+		return nil
 	},
 }

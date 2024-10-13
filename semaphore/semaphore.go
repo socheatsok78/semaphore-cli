@@ -2,6 +2,8 @@ package semaphore
 
 import (
 	"context"
+	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net"
@@ -13,14 +15,15 @@ import (
 )
 
 type Semaphore struct {
-	url    *url.URL
-	client *http.Client
+	Url        *url.URL
+	DnsResolv  *net.Resolver
+	HttpClient *http.Client
 }
 
-func New(addr string, dns string) *Semaphore {
+func New(addr string, dns string) (*Semaphore, error) {
 	addrUrl, err := url.Parse(addr)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	dnsResolver := &net.Resolver{
 		PreferGo: true,
@@ -34,7 +37,7 @@ func New(addr string, dns string) *Semaphore {
 	}
 	jar, err := cookiejar.New(nil)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	client := &http.Client{
 		Jar: jar,
@@ -43,39 +46,44 @@ func New(addr string, dns string) *Semaphore {
 		},
 	}
 	return &Semaphore{
-		url:    addrUrl,
-		client: client,
-	}
+		Url:        addrUrl,
+		HttpClient: client,
+	}, nil
 }
 
-func (s *Semaphore) Login(username string, password string) error {
+func (s *Semaphore) Authenticate(username string, password string) error {
+	if username == "" || password == "" {
+		return errors.New("username and password are required")
+	}
+	authJson, _ := json.Marshal(map[string]string{
+		"auth":     username,
+		"password": password,
+	})
 	req := &http.Request{
 		Method: "POST",
-		URL:    &url.URL{Scheme: s.url.Scheme, Host: s.url.Host, Path: "/api/auth/login"},
+		URL:    &url.URL{Scheme: s.Url.Scheme, Host: s.Url.Host, Path: "/api/auth/login"},
 		Header: http.Header{"Content-Type": []string{"application/json"}},
-		Body:   io.NopCloser(strings.NewReader(fmt.Sprintf(`{"auth": "%s", "password": "%s"}`, username, password))),
+		Body:   io.NopCloser(strings.NewReader(string(authJson))),
 	}
-	resp, err := s.client.Do(req)
+	resp, err := s.HttpClient.Do(req)
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("login failed: %s", resp.Status)
-	} else {
-		fmt.Println("login successful")
+		return errors.New("login failed")
 	}
 	return nil
 }
 
-func (s *Semaphore) Backup(projectID string) error {
+func (s *Semaphore) Backup(projectID string, backupFile string) error {
 	fmt.Println("creating backup")
 	req := &http.Request{
 		Method: "GET",
-		URL:    &url.URL{Scheme: s.url.Scheme, Host: s.url.Host, Path: fmt.Sprintf("/api/project/%s/backup", projectID)},
+		URL:    &url.URL{Scheme: s.Url.Scheme, Host: s.Url.Host, Path: fmt.Sprintf("/api/project/%s/backup", projectID)},
 		Header: http.Header{"Content-Type": []string{"application/json"}},
 	}
-	resp, err := s.client.Do(req)
+	resp, err := s.HttpClient.Do(req)
 	if err != nil {
 		return err
 	}
@@ -92,6 +100,6 @@ func (s *Semaphore) Backup(projectID string) error {
 	return nil
 }
 
-func (s *Semaphore) Restore(projectID string) error {
+func (s *Semaphore) Restore(projectID string, backupFile string) error {
 	return nil
 }
