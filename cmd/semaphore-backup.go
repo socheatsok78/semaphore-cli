@@ -1,6 +1,11 @@
 package cmd
 
 import (
+	"io"
+	"os"
+
+	"github.com/go-kit/log/level"
+	"github.com/socheatsok78/semaphore-cli/internals"
 	"github.com/socheatsok78/semaphore-cli/semaphore"
 	"github.com/spf13/cobra"
 )
@@ -29,8 +34,23 @@ var backupCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		if err := s.Backup(configBackupProjectID, configBackupFile); err != nil {
+		level.Info(internals.Logger).Log("msg", "Creating backup", "project", configBackupProjectID)
+		data, err := s.Backup(configBackupProjectID, configBackupFile)
+		if err != nil {
 			return err
+		}
+		defer data.Close()
+		if configBackupFile == "stdout" {
+			level.Info(internals.Logger).Log("msg", "Writing backup to stdout")
+			io.Copy(os.Stdout, data)
+		} else {
+			file, err := os.Create(configBackupFile)
+			if err != nil {
+				return err
+			}
+			defer file.Close()
+			level.Info(internals.Logger).Log("msg", "Writing backup to file", "file", configBackupFile)
+			io.Copy(file, data)
 		}
 		return nil
 	},
