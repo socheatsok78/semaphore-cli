@@ -26,10 +26,12 @@ var backupCmd = &cobra.Command{
 	Use:   "backup",
 	Short: "Create a backup of Semaphore project",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		level.Info(internal.Logger).Log("msg", "Connecting to Semaphore")
 		s, err := semaphore.New(configAddr, configDNS)
 		if err != nil {
 			return err
 		}
+		level.Info(internal.Logger).Log("msg", "Authenticating user")
 		err = s.Authenticate(configUsername, configPassword)
 		if err != nil {
 			return err

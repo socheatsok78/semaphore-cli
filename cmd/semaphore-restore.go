@@ -42,19 +42,16 @@ var restoreCmd = &cobra.Command{
 		if err = json.Unmarshal(fileBytes, backup); err != nil {
 			return err
 		}
-
 		level.Info(internal.Logger).Log("msg", "Connecting to Semaphore")
 		s, err := semaphore.New(configAddr, configDNS)
 		if err != nil {
 			return err
 		}
-
-		level.Info(internal.Logger).Log("msg", "Authenticating")
+		level.Info(internal.Logger).Log("msg", "Authenticating user")
 		err = s.Authenticate(configUsername, configPassword)
 		if err != nil {
 			return err
 		}
-
 		level.Info(internal.Logger).Log("msg", "Restoring project", "project", configRestoreProjectID)
 		if err := s.Restore(configRestoreProjectID, backup); err != nil {
 			return err
