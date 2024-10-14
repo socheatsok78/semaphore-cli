@@ -12,5 +12,5 @@ var Logger = log.NewLogfmtLogger(os.Stderr)
 func init() {
 	Logger = level.NewFilter(Logger, level.AllowAll())
 	Logger = log.With(Logger, "ts", log.DefaultTimestampUTC)
-	Logger = log.With(Logger, "caller", log.DefaultCaller)
+	// Logger = log.With(Logger, "caller", log.DefaultCaller)
 }
