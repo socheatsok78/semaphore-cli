@@ -1,17 +1,9 @@
 package semaphore
 
-type SemaphoreProject struct {
-	ID               int    `json:"id,omitempty"`
-	Name             string `json:"name"`
-	Alert            bool   `json:"alert,omitempty"`
-	AlertChat        string `json:"alert_chat,omitempty"`
-	MaxParallelTasks int    `json:"max_parallel_tasks,omitempty"`
-	Type             string `json:"type,omitempty"`
-	Created          string `json:"created,omitempty"`
-}
+import "github.com/socheatsok78/semaphore-cli/types"
 
-func NewProject(name string, maxParallelTasks int) *SemaphoreProject {
-	return &SemaphoreProject{
+func NewProject(name string, maxParallelTasks int) *types.SemaphoreProject {
+	return &types.SemaphoreProject{
 		Name:             name,
 		MaxParallelTasks: maxParallelTasks,
 	}
