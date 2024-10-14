@@ -12,6 +12,9 @@ import (
 	"net/url"
 	"os"
 	"strings"
+
+	"github.com/go-kit/log/level"
+	"github.com/socheatsok78/semaphore-cli/internals"
 )
 
 type Semaphore struct {
@@ -77,7 +80,7 @@ func (s *Semaphore) Authenticate(username string, password string) error {
 }
 
 func (s *Semaphore) Backup(projectID string, backupFile string) error {
-	fmt.Println("creating backup")
+	level.Info(internals.Logger).Log("msg", "Creating backup", "project", projectID)
 	req := &http.Request{
 		Method: "GET",
 		URL:    &url.URL{Scheme: s.Url.Scheme, Host: s.Url.Host, Path: fmt.Sprintf("/api/project/%s/backup", projectID)},
@@ -89,13 +92,22 @@ func (s *Semaphore) Backup(projectID string, backupFile string) error {
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("backup failed: %s", resp.Status)
+		return errors.New("Backup failed")
 	} else {
-		fmt.Println("backup successful")
-		// TODO: save backup to file
-		// Print the backup to stdout for now
-		fmt.Println("backup content")
-		io.Copy(os.Stdout, resp.Body)
+		if backupFile == "stdout" {
+			// Write to stdout
+			level.Info(internals.Logger).Log("msg", "Writing backup to console")
+			io.Copy(os.Stdout, resp.Body)
+		} else {
+			// Write to file
+			level.Info(internals.Logger).Log("msg", "Writing backup to file", "file", backupFile)
+			file, err := os.Create(backupFile)
+			if err != nil {
+				return err
+			}
+			defer file.Close()
+			io.Copy(file, resp.Body)
+		}
 	}
 	return nil
 }

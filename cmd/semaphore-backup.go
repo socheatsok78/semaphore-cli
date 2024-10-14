@@ -13,7 +13,7 @@ var (
 func init() {
 	rootCmd.AddCommand(backupCmd)
 	backupCmd.Flags().StringVar(&configBackupProjectID, "project-id", "", "semaphore project id")
-	backupCmd.Flags().StringVar(&configBackupFile, "output", "backup-%s.json", "output file")
+	backupCmd.Flags().StringVar(&configBackupFile, "output", "stdout", "output")
 	backupCmd.MarkFlagRequired("project")
 }
 
