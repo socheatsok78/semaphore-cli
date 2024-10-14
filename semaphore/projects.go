@@ -16,7 +16,3 @@ func NewProject(name string, maxParallelTasks int) *SemaphoreProject {
 		MaxParallelTasks: maxParallelTasks,
 	}
 }
-
-func NewProjectFromBackup(backup *SemaphoreBackup) {
-	//
-}
