@@ -96,11 +96,11 @@ func (s *Semaphore) Backup(projectID string, backupFile string) error {
 	} else {
 		if backupFile == "stdout" {
 			// Write to stdout
-			level.Info(internals.Logger).Log("msg", "Writing backup to console")
+			level.Info(internals.Logger).Log("msg", "Writing backup to console", "project", projectID)
 			io.Copy(os.Stdout, resp.Body)
 		} else {
 			// Write to file
-			level.Info(internals.Logger).Log("msg", "Writing backup to file", "file", backupFile)
+			level.Info(internals.Logger).Log("msg", "Writing backup to file", "project", projectID, "file", backupFile)
 			file, err := os.Create(backupFile)
 			if err != nil {
 				return err

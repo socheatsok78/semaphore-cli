@@ -7,7 +7,7 @@ import (
 	"github.com/go-kit/log/level"
 )
 
-var Logger = log.NewLogfmtLogger(os.Stdout)
+var Logger = log.NewLogfmtLogger(os.Stderr)
 
 func init() {
 	Logger = level.NewFilter(Logger, level.AllowAll())
