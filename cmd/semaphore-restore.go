@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/go-kit/log/level"
-	"github.com/socheatsok78/semaphore-cli/internals"
+	"github.com/socheatsok78/semaphore-cli/internal"
 	"github.com/socheatsok78/semaphore-cli/semaphore"
 	"github.com/socheatsok78/semaphore-cli/types"
 	"github.com/spf13/cobra"
@@ -28,7 +28,7 @@ var restoreCmd = &cobra.Command{
 	Use:   "restore",
 	Short: "Restore a Semaphore project from backup",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		level.Info(internals.Logger).Log("msg", "Reading backup from file", "file", configRestoreBackupFile)
+		level.Info(internal.Logger).Log("msg", "Reading backup from file", "file", configRestoreBackupFile)
 		file, err := os.Open(configRestoreBackupFile)
 		if err != nil {
 			return err
@@ -43,19 +43,19 @@ var restoreCmd = &cobra.Command{
 			return err
 		}
 
-		level.Info(internals.Logger).Log("msg", "Connecting to Semaphore")
+		level.Info(internal.Logger).Log("msg", "Connecting to Semaphore")
 		s, err := semaphore.New(configAddr, configDNS)
 		if err != nil {
 			return err
 		}
 
-		level.Info(internals.Logger).Log("msg", "Authenticating")
+		level.Info(internal.Logger).Log("msg", "Authenticating")
 		err = s.Authenticate(configUsername, configPassword)
 		if err != nil {
 			return err
 		}
 
-		level.Info(internals.Logger).Log("msg", "Restoring project", "project", configRestoreProjectID)
+		level.Info(internal.Logger).Log("msg", "Restoring project", "project", configRestoreProjectID)
 		if err := s.Restore(configRestoreProjectID, backup); err != nil {
 			return err
 		}
