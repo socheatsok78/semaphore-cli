@@ -5,13 +5,18 @@ import (
 	"net/http"
 )
 
+type SemaphoreAuth struct {
+	Username string `json:"auth"`
+	Password string `json:"password"`
+}
+
 func (s *Semaphore) Authenticate(username string, password string) error {
 	if username == "" || password == "" {
 		return errors.New("username and password are required")
 	}
-	authJson := map[string]string{
-		"auth":     username,
-		"password": password,
+	authJson := &SemaphoreAuth{
+		Username: username,
+		Password: password,
 	}
 	resp, err := s.Write("/api/auth/login", authJson)
 	if err != nil {

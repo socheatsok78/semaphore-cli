@@ -1,13 +1,22 @@
 package semaphore
 
-// /api/projects
-// {name: "Demo", alert: true, alert_chat: "tfchatid", max_parallel_tasks: 0}
 type SemaphoreProject struct {
-	ID               int    `json:"id"`
+	ID               int    `json:"id,omitempty"`
 	Name             string `json:"name"`
-	Alert            bool   `json:"alert"`
-	AlertChat        string `json:"alert_chat"`
-	MaxParallelTasks int    `json:"max_parallel_tasks"`
-	Type             string `json:"type"`
-	Created          string `json:"created"`
+	Alert            bool   `json:"alert,omitempty"`
+	AlertChat        string `json:"alert_chat,omitempty"`
+	MaxParallelTasks int    `json:"max_parallel_tasks,omitempty"`
+	Type             string `json:"type,omitempty"`
+	Created          string `json:"created,omitempty"`
+}
+
+func NewProject(name string, maxParallelTasks int) *SemaphoreProject {
+	return &SemaphoreProject{
+		Name:             name,
+		MaxParallelTasks: maxParallelTasks,
+	}
+}
+
+func NewProjectFromBackup(backup *SemaphoreBackup) {
+	//
 }

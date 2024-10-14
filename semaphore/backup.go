@@ -11,14 +11,12 @@ import (
 	"github.com/socheatsok78/semaphore-cli/internals"
 )
 
+type SemaphoreBackup struct {
+	Meta *SemaphoreProject `json:"meta"`
+}
+
 func (s *Semaphore) Backup(projectID string, backupFile string) error {
 	level.Info(internals.Logger).Log("msg", "Creating backup", "project", projectID)
-	// req := &http.Request{
-	// 	Method: "GET",
-	// 	URL:    &url.URL{Scheme: s.Url.Scheme, Host: s.Url.Host, Path: fmt.Sprintf("/api/project/%s/backup", projectID)},
-	// 	Header: http.Header{"Content-Type": []string{"application/json"}},
-	// }
-	// resp, err := s.HttpClient.Do(req)
 	resp, err := s.Read(fmt.Sprintf("/api/project/%s/backup", projectID))
 	if err != nil {
 		return err
