@@ -8,6 +8,7 @@ import (
 	"github.com/go-kit/log/level"
 	"github.com/socheatsok78/semaphore-cli/internals"
 	"github.com/socheatsok78/semaphore-cli/semaphore"
+	"github.com/socheatsok78/semaphore-cli/types"
 	"github.com/spf13/cobra"
 )
 
@@ -37,7 +38,7 @@ var restoreCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		backup := &semaphore.SemaphoreBackup{}
+		backup := &types.SemaphoreBackup{}
 		if err = json.Unmarshal(fileBytes, backup); err != nil {
 			return err
 		}

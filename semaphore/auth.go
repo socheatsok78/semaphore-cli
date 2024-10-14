@@ -3,18 +3,15 @@ package semaphore
 import (
 	"errors"
 	"net/http"
-)
 
-type SemaphoreAuth struct {
-	Username string `json:"auth"`
-	Password string `json:"password"`
-}
+	"github.com/socheatsok78/semaphore-cli/types"
+)
 
 func (s *Semaphore) Authenticate(username string, password string) error {
 	if username == "" || password == "" {
 		return errors.New("username and password are required")
 	}
-	authJson := &SemaphoreAuth{
+	authJson := &types.SemaphoreAuth{
 		Username: username,
 		Password: password,
 	}
